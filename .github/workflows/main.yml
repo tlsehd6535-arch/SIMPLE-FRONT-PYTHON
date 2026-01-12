@@ -21,11 +21,16 @@ jobs:
       # 3️⃣ 의존성 설치
       - name: 피카츄-테스트에 필요한 라이브러리 설치
         run: |
-           pip install pytest
-           pip install requests
-           pip install jsonschema
-          # pip install -r requirements.txt
+          pip install pytest requests jsonschema pytest-html
 
-      # 4️⃣ pytest 실행
+      # 4️⃣ pytest 실행 (리포트 생성 옵션 추가)
       - name: 피카츄-파이테스트 실행
-        run: pytest
+        run: pytest --html=report.html --self-contained-html
+
+      # 5️⃣ 생성된 리포트 저장 (이걸 해야 나중에 웹에서 결과 파일을 다운로드 가능!)
+      - name: 피카츄-결과 리포트 업로드
+        if: always() # 테스트가 실패해도 리포트는 무조건 올리도록 설정
+        uses: actions/upload-artifact@v4
+        with:
+          name: pikachu-test-report
+          path: report.html
